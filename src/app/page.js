@@ -1,6 +1,14 @@
-import Image from "next/image";
+"use client";
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Home() {
+  const router = useRouter();
+
+  const redirectToAuth = () => {
+    router.push('/auth'); // Asegúrate de que la ruta sea correcta
+  };
+
   return (
     <div className="">
       <main className="">
@@ -48,6 +56,15 @@ export default function Home() {
 
       <div>Aqui va el Pomodoro</div>
       <footer className="">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            redirectToAuth();
+          }}
+        >
+          Go to authentication
+        </a>
         <a
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
