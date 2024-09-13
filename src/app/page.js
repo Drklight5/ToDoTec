@@ -25,7 +25,7 @@ export default function Home() {
           <h5 className="text-body-tertiary">DIAS COMPLETOS</h5>
           <div className="d-flex col-12 col-md-9 col-xl-6 justify-content-bewteen overflow-x-auto">
             {dias.map((element, i) => (
-              <div className="p-3 bg-body-tertiary rounded m-2">
+              <div key={i} className="p-3 bg-body-tertiary rounded m-2">
                 <i class="bi bi-fire fs-2 text-warning"></i>
                 <div className="text-center">{element}</div>
               </div>
@@ -37,7 +37,7 @@ export default function Home() {
           <h5 className="text-body-tertiary">TAREAS PENDIENTES</h5>
           <div className="my-3 col-12 col-md-9 col-xl-6">
             {tareas.map((element, i) => (
-              <div className="rounded-4 bg-body-tertiary my-3 px-4 py-3">
+              <div key={i} className="rounded-4 bg-body-tertiary my-3 px-4 py-3">
                 {element}
               </div>
             ))}
