@@ -2,7 +2,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 
 // Firebase configuration
@@ -48,6 +48,22 @@ export const getTasks = async () => {
   });
   return tasks;
 };
+
+// // Get tasks by user UID
+// export async function getTasksUid (uid) {
+//   const tasks = [];
+  
+//   // Crea una consulta que filtre las tareas por el campo 'uid' del usuario
+//   const tasksQuery = query(collection(db, 'tasks'), where('uid', '==', uid));
+  
+//   const querySnapshot = await getDocs(tasksQuery);
+  
+//   querySnapshot.forEach((doc) => {
+//     tasks.push({ id: doc.id, ...doc.data() });
+//   });
+  
+//   return tasks;
+// };
 
 // Update a task
 export const updateTask = async (id, updatedTask) => {
