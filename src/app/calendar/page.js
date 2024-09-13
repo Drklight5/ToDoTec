@@ -85,80 +85,80 @@ const CalendarView = () => {
       <style jsx>{`
         .calendar-container {
           padding: 20px;
-          background-color: #e0f7fa; /* Color aqua claro para el fondo completo */
-          min-height: 100vh; /* Asegura que el contenedor abarque al menos la altura completa de la vista */
+          background-color: #ffffff; /* Fondo blanco */
+          min-height: 100vh;
         }
 
         h1 {
-          color: #00bcd4; /* Color aqua */
+          color: #097D8A; /* Color aqua oscuro */
           margin: 0;
-          text-align: center; /* Alinear el título al centro */
+          text-align: center;
         }
 
         .calendar-header {
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 20px 0; /* Separar del título Calendar */
+          margin: 20px 0;
         }
 
         .nav-button {
-          background-color: #00bcd4; /* Color aqua */
+          background-color: #097D8A; /* Color aqua oscuro */
           border: none;
           color: white;
-          padding: 5px 10px; /* Tamaño reducido */
-          margin: 0 5px; /* Tamaño reducido */
+          padding: 5px 10px;
+          margin: 0 5px;
           cursor: pointer;
           border-radius: 5px;
-          font-size: 0.875em; /* Tamaño de fuente reducido */
+          font-size: 0.875em;
         }
 
         .nav-button:hover {
-          background-color: #0097a7; /* Color aqua oscuro */
+          background-color: #005f6b; /* Color aqua oscuro más intenso */
         }
 
         h2 {
-          color: #00bcd4; /* Color aqua */
+          color: #097D8A; /* Color aqua oscuro */
           margin: 0;
-          font-size: 1.2em; /* Tamaño de fuente ajustado para el título del mes */
+          font-size: 1.2em;
         }
 
         .main-content {
           display: flex;
-          justify-content: center; /* Centrar el contenido horizontalmente */
-          gap: 20px; /* Espacio entre el calendario y la sección de tareas */
+          justify-content: center;
+          gap: 20px;
         }
 
         .calendar-grid {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           gap: 1px;
-          background-color: #00bcd4; /* Color aqua */
+          background-color: #097D8A; /* Color aqua oscuro */
         }
 
         .calendar-day {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 15px; /* Tamaño reducido */
+          padding: 15px;
           cursor: pointer;
-          border: 1px solid #00bcd4; /* Color aqua */
+          border: 1px solid #097D8A; /* Color aqua oscuro */
           text-align: center;
-          background-color: #fff;
+          background-color: #ffffff;
           transition: background-color 0.3s, color 0.3s;
         }
 
         .calendar-day:hover {
-          background-color: #00bcd4; /* Color aqua */
-          color: #fff;
+          background-color: #097D8A; /* Color aqua oscuro */
+          color: #ffffff;
         }
 
         .tasks-container {
           padding: 15px;
-          background: #00bcd4; /* Color aqua */
+          background: #BCDE40; /* Verde brillante */
           border-radius: 8px;
           flex: 1;
-          max-width: 300px; /* Máximo ancho para la sección de tareas */
+          max-width: 300px;
         }
 
         .tasks-header {
@@ -167,16 +167,16 @@ const CalendarView = () => {
         }
 
         .tasks-label {
-          color: #fff;
+          color: #ffffff;
           font-weight: bold;
           display: block;
         }
 
         .tasks-date {
-          color: #004d40; /* Verde oscuro */
+          color: #000000; /* Color negro */
           font-weight: bold;
           margin-top: 5px;
-          font-size: 1.25em; /* Aumentar tamaño del texto */
+          font-size: 1.25em;
         }
 
         .task-list {
@@ -188,7 +188,7 @@ const CalendarView = () => {
         .task-item {
           padding: 10px;
           border-bottom: 1px solid #ccc;
-          color: #333;
+          color: #333333;
         }
       `}</style>
     </div>
