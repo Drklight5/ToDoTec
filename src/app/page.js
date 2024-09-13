@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Validate } from '@/components/Validate';
+import Menu from '@/components/menu';
 
 export default function Home() {
   const router = useRouter();
@@ -62,6 +63,7 @@ export default function Home() {
         <footer className="d-flex justify-content-between align-items-center py-3 my-4 border-top">
 
         </footer>
+        <Menu></Menu>
       </div>
   );
 }
