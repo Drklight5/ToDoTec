@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { getTasksForDate } from '../../helpers/api';
 import Menu from "@/components/Menu";
 import { Validate } from '@/components/Validate';
+import { getTasks } from '@/helpers/firebase';
 
 const CalendarView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const [stringDate, setStringDate] = useState("");
   const [tasks, setTasks] = useState([]);
   const [days, setDays] = useState([]);
 
@@ -23,17 +26,31 @@ const CalendarView = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const tasksForDate = await getTasksForDate(selectedDate.toISOString().split('T')[0]);
+      const tasksForDate = await getTasks();
       setTasks(tasksForDate);
     };
 
     fetchTasks();
   }, [selectedDate]);
 
-  const handleDateClick = (day) => {
-    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
-    setSelectedDate(newDate);
-  };
+const handleDateClick = (day) => {
+  // Crea una nueva fecha con el día seleccionado
+  const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+  
+  // Extrae el año, mes y día
+  let y = newDate.getFullYear();
+  const month = String(newDate.getMonth() + 1).padStart(2, '0'); // Los meses empiezan desde 0
+  const dayFormatted = String(newDate.getDate()).padStart(2, '0');
+  
+  // Construye la fecha en el formato deseado
+  const formattedDate = `${y}-${month}-${dayFormatted}`;
+  
+  // Establece la nueva fecha
+  setSelectedDate(new Date(y, newDate.getMonth(), day));
+  
+  // Retorna la fecha formateada
+  setStringDate(formattedDate);
+};
 
   const goToPreviousMonth = () => {
     setSelectedDate(prevDate => {
@@ -86,12 +103,14 @@ const CalendarView = () => {
           </div>
           <ul className="task-list">
             {tasks.map((task, index) => {
-                if (task.date.split("T")[0] === selectedDate){
-                    <li key={index} className="task-item">
-                        {task.name}
-                    </li>
+                console.log(stringDate, task.date.split("T")[0]);
+                if (task.date.split("T")[0] == stringDate){
+                    return <li key={index} className="task-item">
+                        {task.task} 
+                     </li>
                 }
                 else{
+                    console.log(index)
                     return <></>
                 }
             })
