@@ -39,3 +39,13 @@ export function createWeekDictionary() {
   console.log(weekDictionary);
   return weekDictionary;
 }
+
+export function findCompletedTask(tasks, current_fecha) {
+  return tasks.some((task) => {
+    // Convertimos el campo 'date' al formato 'aaaa-mm-dd' (ignorando la hora)
+    const taskDate = task.date.split("T")[0];
+
+    // Verificamos si la fecha coincide y el estado es 'complete'
+    return taskDate === current_fecha && task.status === "complete";
+  });
+}
