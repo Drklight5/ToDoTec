@@ -9,6 +9,9 @@ export default function Home() {
   const redirectToAuth = () => {
     router.push('/auth'); // Ensure the route is correct
   };
+  const redirectToToDo = () => {
+    router.push('/todo'); // Ensure the route is correct
+  };
 
   return (
       <div className="container">
@@ -35,6 +38,16 @@ export default function Home() {
               >
                   Go to Authentication
               </button>
+                 {/* ToDoList */}
+            <button
+                  className="btn btn-secondary"
+                  onClick={(e) => {
+                      e.preventDefault();
+                      redirectToToDo();
+                  }}
+              >
+                  Go to ToDo
+              </button>
 
               {/* Link to Pomodoro Timer in Footer */}
               <Link href="/pomodoro" className="btn btn-primary ms-3">
@@ -54,6 +67,7 @@ export default function Home() {
                   height={20}
               />
             </a>
+         
           </div>
         </main>
         <footer className="d-flex justify-content-between align-items-center py-3 my-4 border-top">
