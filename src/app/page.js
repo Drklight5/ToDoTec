@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Validate } from '@/components/Validate';
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Home() {
 
   return (
       <div className="container">
+        <Validate/>
         <main className="my-5">
           {/* Next.js logo */}
           <Image
@@ -70,6 +72,7 @@ export default function Home() {
          
           </div>
         </main>
+        
         <footer className="d-flex justify-content-between align-items-center py-3 my-4 border-top">
 
         </footer>

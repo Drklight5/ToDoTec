@@ -1,17 +1,33 @@
 "use client";
+
 import { useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, githubProvider } from '../../helpers/firebase';
 import Image from 'next/image';
+import { useAppContext } from '@/helpers/context';
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+
+  const router = useRouter();
   const [error, setError] = useState('');
+  const {data, setData} = useAppContext();
 
   const handleLogin = async (provider) => {
     try {
-      await signInWithPopup(auth, provider);
+      let user = await signInWithPopup(auth, provider);
+      setData(prev => {
+        prev.user = {
+          uid: user.user.uid,
+          name: user.user.displayName,
+          email: user.user.email,
+        }
+        return prev
+      }
+        );
+
       // Redirige al usuario a la página principal o dashboard
-      window.location.href = '/';
+      router.push("/"); // Ensure the route is correct
     } catch (err) {
       setError('Error al iniciar sesión: ' + err.message);
     }
