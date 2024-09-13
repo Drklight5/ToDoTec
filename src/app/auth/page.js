@@ -35,14 +35,40 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
+      <Image
+        className="mb-4"
+        src="/logo.png"
+        alt="ToDoTec logo"
+        width={180}
+        height={180}
+        priority
+      />
       <h2>Iniciar Sesión</h2>
       <div className="buttons-container">
-        <button onClick={() => handleLogin(googleProvider)} className="login-button google-button">
-          <Image src="/icons/googleicon.png" alt="Google" className="icon" width={24} height={24} />
+        <button
+          onClick={() => handleLogin(googleProvider)}
+          className="login-button google-button"
+        >
+          <Image
+            src="/icons/googleicon.png"
+            alt="Google"
+            className="icon"
+            width={24}
+            height={24}
+          />
           <span>Iniciar sesión con Google</span>
         </button>
-        <button onClick={() => handleLogin(githubProvider)} className="login-button github-button">
-          <Image src="/icons/githubicon.svg" alt="GitHub" className="icon" width={24} height={24} />
+        <button
+          onClick={() => handleLogin(githubProvider)}
+          className="login-button github-button"
+        >
+          <Image
+            src="/icons/githubicon.svg"
+            alt="GitHub"
+            className="icon"
+            width={24}
+            height={24}
+          />
           <span>Iniciar sesión con GitHub</span>
         </button>
       </div>
