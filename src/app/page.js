@@ -16,10 +16,10 @@ export default function Home() {
           {/* Next.js logo */}
           <Image
               className="mb-4"
-              src="https://nextjs.org/icons/next.svg"
-              alt="Next.js logo"
+              src="/logo.png"
+              alt="ToDoTec logo"
               width={180}
-              height={38}
+              height={180}
               priority
           />
 
