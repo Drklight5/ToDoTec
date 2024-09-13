@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import db from '../../helpers/firebase'; // Adjust the import path if necessary
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import Menu from '@/components/Menu';
+import { Validate } from '@/components/Validate';
 
 export default function PomodoroPage() {
     const [time, setTime] = useState(25 * 60);
@@ -66,50 +67,57 @@ export default function PomodoroPage() {
     }, []);
 
     return (
-        <div className="container">
-            <main className="d-flex flex-column justify-content-center align-items-center min-vh-100">
-                <h1 className="mb-5">Pomodoro Timer</h1>
-                <div className="bg-body-tertiary rounded p-5" style={{ minWidth: "300px" }}>
-                    <div className="card-body text-center">
-                        <h2 className="mb-4">
-                            {type === "work" ? "Time to Focus" : "Break Time"}
-                        </h2>
-                        <h3 className="display-1 mb-4">{formatTime(time)}</h3>
-                        <button
-                            className="btn btn-primary btn me-3"
-                            onClick={toggleTimer}
-                        >
-                            {isActive ? "Pause" : "Start"}
-                        </button>
-                        <button className="btn btn-secondary btn" onClick={resetTimer}>
-                            Reset
-                        </button>
-                        <div className="mt-4">
-                            <h3>Select Task</h3>
-                            <select
-                                className="form-select"
-                                value={selectedTask || ''}
-                                onChange={(e) => setSelectedTask(e.target.value)}
-                            >
-                                <option value="">Select a Task</option>
-                                {tasks.map(task => (
-                                    <option key={task.id} value={task.id}>
-                                        {task.status === 'incomplete' ? '🔲' : '✅'} {task.task}
-                                    </option>
-                                ))}
-                            </select>
-                            <button
-                                className="btn btn-success mt-2"
-                                onClick={() => selectedTask && handleUpdateTaskStatus(selectedTask, 'complete')}
-                                disabled={!selectedTask}
-                            >
-                                Mark as Complete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <Menu />
-        </div>
+      <div className="container">
+        <Validate/>
+        <main className="d-flex flex-column justify-content-center align-items-center min-vh-100">
+          <h1 className="mb-5">Pomodoro Timer</h1>
+          <div
+            className="bg-body-tertiary rounded p-5"
+            style={{ minWidth: "300px" }}
+          >
+            <div className="card-body text-center">
+              <h2 className="mb-4">
+                {type === "work" ? "Time to Focus" : "Break Time"}
+              </h2>
+              <h3 className="display-1 mb-4">{formatTime(time)}</h3>
+              <button
+                className="btn btn-primary btn me-3"
+                onClick={toggleTimer}
+              >
+                {isActive ? "Pause" : "Start"}
+              </button>
+              <button className="btn btn-secondary btn" onClick={resetTimer}>
+                Reset
+              </button>
+              <div className="mt-4">
+                <h3>Select Task</h3>
+                <select
+                  className="form-select"
+                  value={selectedTask || ""}
+                  onChange={(e) => setSelectedTask(e.target.value)}
+                >
+                  <option value="">Select a Task</option>
+                  {tasks.map((task) => (
+                    <option key={task.id} value={task.id}>
+                      {task.status === "incomplete" ? "🔲" : "✅"} {task.task}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="btn btn-success mt-2"
+                  onClick={() =>
+                    selectedTask &&
+                    handleUpdateTaskStatus(selectedTask, "complete")
+                  }
+                  disabled={!selectedTask}
+                >
+                  Mark as Complete
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Menu />
+      </div>
     );
 }

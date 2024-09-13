@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getTasksForDate } from '../../helpers/api';
 import Menu from "@/components/Menu";
+import { Validate } from '@/components/Validate';
 
 const CalendarView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -50,11 +51,21 @@ const CalendarView = () => {
 
   return (
     <div className="calendar-container">
+      <Validate/>
       <h1>Calendar</h1>
       <div className="calendar-header">
-        <button onClick={goToPreviousMonth} className="nav-button">Previous</button>
-        <h2>{selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
-        <button onClick={goToNextMonth} className="nav-button">Next</button>
+        <button onClick={goToPreviousMonth} className="nav-button">
+          Previous
+        </button>
+        <h2>
+          {selectedDate.toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })}
+        </h2>
+        <button onClick={goToNextMonth} className="nav-button">
+          Next
+        </button>
       </div>
       <div className="main-content">
         <div className="calendar-grid">
@@ -91,7 +102,7 @@ const CalendarView = () => {
         }
 
         h1 {
-          color: #097D8A; /* Color aqua oscuro */
+          color: #097d8a; /* Color aqua oscuro */
           margin: 0;
           text-align: center;
         }
@@ -104,7 +115,7 @@ const CalendarView = () => {
         }
 
         .nav-button {
-          background-color: #097D8A; /* Color aqua oscuro */
+          background-color: #097d8a; /* Color aqua oscuro */
           border: none;
           color: white;
           padding: 5px 10px;
@@ -119,7 +130,7 @@ const CalendarView = () => {
         }
 
         h2 {
-          color: #097D8A; /* Color aqua oscuro */
+          color: #097d8a; /* Color aqua oscuro */
           margin: 0;
           font-size: 1.2em;
         }
@@ -134,7 +145,7 @@ const CalendarView = () => {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           gap: 1px;
-          background-color: #097D8A; /* Color aqua oscuro */
+          background-color: #097d8a; /* Color aqua oscuro */
         }
 
         .calendar-day {
@@ -143,20 +154,20 @@ const CalendarView = () => {
           justify-content: center;
           padding: 15px;
           cursor: pointer;
-          border: 1px solid #097D8A; /* Color aqua oscuro */
+          border: 1px solid #097d8a; /* Color aqua oscuro */
           text-align: center;
           background-color: #ffffff;
           transition: background-color 0.3s, color 0.3s;
         }
 
         .calendar-day:hover {
-          background-color: #097D8A; /* Color aqua oscuro */
+          background-color: #097d8a; /* Color aqua oscuro */
           color: #ffffff;
         }
 
         .tasks-container {
           padding: 15px;
-          background: #BCDE40; /* Verde brillante */
+          background: #bcde40; /* Verde brillante */
           border-radius: 8px;
           flex: 1;
           max-width: 300px;
