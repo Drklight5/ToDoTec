@@ -34,7 +34,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className="login-page bg-white">
       <Image
         className="mb-4"
         src="/logo.png"

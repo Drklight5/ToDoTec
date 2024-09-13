@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Menu from '@/components/Menu';
 
 
 export default function PomodoroPage() {
@@ -41,25 +42,29 @@ export default function PomodoroPage() {
     };
 
     return (
-        <div className="container">
-            <main className="d-flex flex-column justify-content-center align-items-center min-vh-100">
-                <h1 className="mb-5">Pomodoro Timer</h1>
-                <div className="card shadow-lg" style={{minWidth: '300px'}}>
-                    <div className="card-body text-center">
-                        <h2 className="mb-4">{type === 'work' ? 'Work Time' : 'Break Time'}</h2>
-                        <h3 className="display-1 mb-4">{formatTime(time)}</h3>
-                        <button className="btn btn-primary btn-lg me-3" onClick={toggleTimer}>
-                            {isActive ? 'Pause' : 'Start'}
-                        </button>
-                        <button className="btn btn-secondary btn-lg" onClick={resetTimer}>
-                            Reset
-                        </button>
-                    </div>
-                </div>
-                <Link href="/" className="btn btn-link mt-5">
-                    Back to Home
-                </Link>
-            </main>
-        </div>
+      <div className="container">
+        <main className="d-flex flex-column justify-content-center align-items-center min-vh-100">
+          <h1 className="mb-5">Pomodoro Timer</h1>
+          <div className=" bg-body-tertiary rounded p-5" style={{ minWidth: "300px" }}>
+            <div className="card-body text-center">
+              <h2 className="mb-4">
+                {type === "work" ? "Time to Focus" : "Break Time"}
+              </h2>
+              <h3 className="display-1 mb-4">{formatTime(time)}</h3>
+              <button
+                className="btn btn-primary btn me-3"
+                onClick={toggleTimer}
+              >
+                {isActive ? "Pause" : "Start"}
+              </button>
+              <button className="btn btn-secondary btn" onClick={resetTimer}>
+                Reset
+              </button>
+            </div>
+          </div>
+        
+        </main>
+        <Menu />
+      </div>
     );
 }

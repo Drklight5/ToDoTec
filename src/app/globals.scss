@@ -16,7 +16,7 @@
     font-style: normal;
 }
 
-$primary: #39C6ED;
+$primary: #097D8A;
 $secondary: #BCDE40;
 $tertiary: #AFB8BA;
 
@@ -25,6 +25,17 @@ $headings-font-weight: 600;
 $headings-color: #444B4B;
 $body-color:#677070;
 $font-family-base :"Quicksand", sans-serif;
+
+
+//Botones
+$input-btn-padding-x: 1.5rem;
+$btn-border-radius: 300px;
+
+
+//Input
+$input-padding-x: 1.5rem;
+$input-border-radius: 300px;
+
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/variables-dark";
@@ -43,6 +54,7 @@ $font-family-base :"Quicksand", sans-serif;
 @import "node_modules/bootstrap/scss/type";
 @import "node_modules/bootstrap/scss/buttons";
 @import "node_modules/bootstrap/scss/images";
+@import "node_modules/bootstrap/scss/forms";
 @import "node_modules/bootstrap/scss/containers";
 @import "node_modules/bootstrap/scss/grid";
 @import "node_modules/bootstrap/scss/helpers";

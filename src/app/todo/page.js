@@ -2,6 +2,7 @@
 
 "use client"; // Ensure client-side rendering
 
+import Menu from '@/components/Menu';
 import { useState } from 'react';
 
 export default function Todo() {
@@ -22,7 +23,7 @@ export default function Todo() {
   return (
     <div className="container my-5">
       <h1 className="mb-4">ToDo List</h1>
-      
+
       {/* Input field and Add button */}
       <div className="mb-4">
         <input
@@ -32,18 +33,20 @@ export default function Todo() {
           placeholder="Add a new task"
           className="form-control"
         />
-        <button
-          className="btn btn-primary mt-2"
-          onClick={handleAddTask}
-        >
-          Add Task
-        </button>
+        <div className='d-flex justify-content-end'>
+          <button className="btn btn-primary my-2" onClick={handleAddTask}>
+            Add Task
+          </button>
+        </div>
       </div>
 
       {/* Task list */}
       <ul className="list-group">
         {tasks.map((task, index) => (
-          <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+          <li
+            key={index}
+            className="list-group-item d-flex justify-content-between align-items-center"
+          >
             {task}
             <button
               className="btn btn-danger btn-sm"
@@ -54,6 +57,7 @@ export default function Todo() {
           </li>
         ))}
       </ul>
+      <Menu />
     </div>
   );
 }
