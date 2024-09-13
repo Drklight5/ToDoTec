@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -27,3 +27,19 @@ export const githubProvider = new GithubAuthProvider();
 // Initialize Firestore
 const db = getFirestore(app);
 export default db;
+const updateTasks = async () => {
+  const tasksCollectionRef = collection(db, 'tasks');
+  const querySnapshot = await getDocs(tasksCollectionRef);
+
+  querySnapshot.forEach(async (docSnap) => {
+    const taskDoc = doc(db, 'tasks', docSnap.id);
+    await updateDoc(taskDoc, {
+      group: 'Group 1',  // Default group, change as needed
+      order: 1           // Default order, adjust as needed
+    });
+  });
+};
+
+updateTasks()
+    .then(() => console.log('Tasks updated successfully'))
+    .catch((error) => console.error('Error updating tasks:', error));
