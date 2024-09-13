@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Validate } from '@/components/Validate';
-import Menu from '@/components/menu';
+import Menu from '@/components/Menu';
 import { useAppContext } from '@/helpers/context';
 
 export default function Home() {
