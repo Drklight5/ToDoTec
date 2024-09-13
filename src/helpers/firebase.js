@@ -1,13 +1,11 @@
+// firebase.js
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAfSLETg6fgznM9pRZXsLapPYNR0vQgeVI",
   authDomain: "todotec-bb970.firebaseapp.com",
@@ -20,26 +18,57 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Auth providers
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 
-// Initialize Firestore
+// Firestore instance
 const db = getFirestore(app);
-export default db;
-const updateTasks = async () => {
-  const tasksCollectionRef = collection(db, 'tasks');
-  const querySnapshot = await getDocs(tasksCollectionRef);
 
-  querySnapshot.forEach(async (docSnap) => {
-    const taskDoc = doc(db, 'tasks', docSnap.id);
-    await updateDoc(taskDoc, {
-      group: 'Group 1',  // Default group, change as needed
-      order: 1           // Default order, adjust as needed
-    });
-  });
+// Firestore CRUD operations for tasks
+
+// Add a new task
+export const addTask = async (task) => {
+  try {
+    const docRef = await addDoc(collection(db, 'tasks'), task);
+    console.log('Task added with ID: ', docRef.id);
+  } catch (error) {
+    console.error('Error adding task: ', error);
+  }
 };
 
-updateTasks()
-    .then(() => console.log('Tasks updated successfully'))
-    .catch((error) => console.error('Error updating tasks:', error));
+// Get all tasks
+export const getTasks = async () => {
+  const tasks = [];
+  const querySnapshot = await getDocs(collection(db, 'tasks'));
+  querySnapshot.forEach((doc) => {
+    tasks.push({ id: doc.id, ...doc.data() });
+  });
+  return tasks;
+};
+
+// Update a task
+export const updateTask = async (id, updatedTask) => {
+  const taskDocRef = doc(db, 'tasks', id);
+  try {
+    await updateDoc(taskDocRef, updatedTask);
+    console.log('Task updated successfully');
+  } catch (error) {
+    console.error('Error updating task: ', error);
+  }
+};
+
+// Delete a task
+export const deleteTask = async (id) => {
+  const taskDocRef = doc(db, 'tasks', id);
+  try {
+    await deleteDoc(taskDocRef);
+    console.log('Task deleted successfully');
+  } catch (error) {
+    console.error('Error deleting task: ', error);
+  }
+};
+
+export default db;

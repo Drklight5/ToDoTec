@@ -1,9 +1,8 @@
-// app/pomodoro/page.js
 "use client";
 
 import { useState, useEffect } from 'react';
-import db from '../../helpers/firebase'; // Adjust the import path if necessary
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import db from '../../helpers/firebase'; // Ajusta la ruta del import si es necesario
 import Menu from '@/components/Menu';
 
 export default function PomodoroPage() {
@@ -11,7 +10,7 @@ export default function PomodoroPage() {
     const [isActive, setIsActive] = useState(false);
     const [type, setType] = useState('work');
     const [tasks, setTasks] = useState([]);
-    const [selectedTask, setSelectedTask] = useState(null);
+    const [selectedTask, setSelectedTask] = useState('');
 
     useEffect(() => {
         let interval = null;
@@ -88,13 +87,13 @@ export default function PomodoroPage() {
                             <h3>Select Task</h3>
                             <select
                                 className="form-select"
-                                value={selectedTask || ''}
+                                value={selectedTask}
                                 onChange={(e) => setSelectedTask(e.target.value)}
                             >
                                 <option value="">Select a Task</option>
                                 {tasks.map(task => (
                                     <option key={task.id} value={task.id}>
-                                        {task.status === 'incomplete' ? '🔲' : '✅'} {task.task}
+                                        {task.status === 'complete' ? '✅' : '🔲'} {task.task}
                                     </option>
                                 ))}
                             </select>

@@ -1,4 +1,3 @@
-// app/todo/page.js
 "use client"; // Ensure client-side rendering
 
 import { useEffect, useState } from 'react';
@@ -14,9 +13,15 @@ export default function Todo() {
     const [newGroupName, setNewGroupName] = useState('');
     const [editGroupId, setEditGroupId] = useState('');
     const [editGroupName, setEditGroupName] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');
+    const [editTaskId, setEditTaskId] = useState('');
+    const [editTask, setEditTask] = useState('');
+    const [editDate, setEditDate] = useState('');
+    const [editTaskGroup, setEditTaskGroup] = useState('');
 
-    const tasksCollectionRef = collection(db, 'tasks'); // Name of your Firestore collection
-    const groupsCollectionRef = collection(db, 'groups'); // Name of your Firestore collection
+    const tasksCollectionRef = collection(db, 'tasks');
+    const groupsCollectionRef = collection(db, 'groups');
 
     const fetchTasks = async () => {
         try {
@@ -39,11 +44,17 @@ export default function Todo() {
     };
 
     const handleAddTask = async () => {
-        if (task.trim() === '') return;
+        if (task.trim() === '' || dueDate === '') return;
         try {
-            await addDoc(tasksCollectionRef, { task: task, status: 'incomplete', group: selectedGroup });
+            await addDoc(tasksCollectionRef, {
+                task: task,
+                status: 'incomplete', // Default status
+                group: selectedGroup,
+                date: new Date(dueDate).toISOString(), // Save date as timestamp
+            });
             setTask('');
             setSelectedGroup('');
+            setDueDate('');
             fetchTasks(); // Refresh the task list
         } catch (error) {
             console.error("Error adding task: ", error);
@@ -59,9 +70,10 @@ export default function Todo() {
         }
     };
 
-    const handleUpdateTaskStatus = async (id, status) => {
+    const handleUpdateTaskStatus = async (id, currentStatus) => {
+        const newStatus = currentStatus === 'complete' ? 'incomplete' : 'complete';
         try {
-            await updateDoc(doc(db, 'tasks', id), { status: status });
+            await updateDoc(doc(db, 'tasks', id), { status: newStatus });
             fetchTasks(); // Refresh the task list
         } catch (error) {
             console.error("Error updating task status: ", error);
@@ -100,10 +112,32 @@ export default function Todo() {
         }
     };
 
+    const handleEditTask = async () => {
+        if (editTask.trim() === '' || editDate === '') return;
+        try {
+            await updateDoc(doc(db, 'tasks', editTaskId), {
+                task: editTask,
+                date: new Date(editDate).toISOString(),
+                group: editTaskGroup,
+            });
+            setEditTaskId('');
+            setEditTask('');
+            setEditDate('');
+            setEditTaskGroup('');
+            fetchTasks(); // Refresh the task list
+        } catch (error) {
+            console.error("Error updating task: ", error);
+        }
+    };
+
     useEffect(() => {
         fetchTasks();
         fetchGroups();
     }, []);
+
+    const filteredTasks = tasks.filter(task => {
+        return selectedDate === '' || new Date(task.date).toDateString() === new Date(selectedDate).toDateString();
+    });
 
     return (
         <div className="container my-5">
@@ -117,6 +151,12 @@ export default function Todo() {
                     onChange={(e) => setTask(e.target.value)}
                     placeholder="Add a new task"
                     className="form-control"
+                />
+                <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="form-control mt-2"
                 />
                 <select
                     className="form-select mt-2"
@@ -143,7 +183,7 @@ export default function Todo() {
                     className="btn btn-secondary my-2"
                     onClick={() => document.getElementById('group-form').classList.toggle('d-none')}
                 >
-                    Manage Groups
+                    Manage Groups <span className="ms-2">&#9660;</span>
                 </button>
                 <div id="group-form" className="d-none">
                     <h3>Create Group</h3>
@@ -198,35 +238,97 @@ export default function Todo() {
                 </div>
             </div>
 
+            {/* Filter Tasks by Date */}
+            <div className="mb-4">
+                <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="form-control"
+                />
+            </div>
+
             {/* Task list */}
             <ul className="list-group">
-                {tasks.map(({ id, task, status, group }) => (
+                {filteredTasks.map(({ id, task, status, group, date }) => (
                     <li
                         key={id}
                         className="list-group-item d-flex justify-content-between align-items-center"
-                        style={{ backgroundColor: status === 'incomplete' ? '#f8d7da' : '#d4edda' }}
+                        style={{ backgroundColor: status === 'complete' ? '#d4edda' : '#f8d7da' }}
                     >
-                        <span>
-                            {group && <strong>{groups.find(g => g.id === group)?.name}: </strong>}
-                            {task}
-                        </span>
+                        <div>
+                            <strong>{task}</strong>
+                            <br />
+                            <small>{new Date(date).toDateString()}</small>
+                            <br />
+                            <small>Group: {groups.find(g => g.id === group)?.name || 'None'}</small>
+                        </div>
                         <div>
                             <button
-                                className="btn btn-secondary btn-sm me-2"
-                                onClick={() => handleUpdateTaskStatus(id, status === 'incomplete' ? 'complete' : 'incomplete')}
+                                className={`btn ${status === 'complete' ? 'btn-secondary' : 'btn-success'} me-2`}
+                                onClick={() => handleUpdateTaskStatus(id, status)}
                             >
-                                {status === 'incomplete' ? 'Change to Complete' : 'Change to Incomplete'}
+                                {status === 'complete' ? 'Mark Incomplete' : 'Mark Complete'}
                             </button>
                             <button
-                                className="btn btn-danger btn-sm"
+                                className="btn btn-danger me-2"
                                 onClick={() => handleDeleteTask(id)}
                             >
                                 Delete
+                            </button>
+                            <button
+                                className="btn btn-info"
+                                onClick={() => {
+                                    setEditTaskId(id);
+                                    setEditTask(task);
+                                    setEditDate(date.split('T')[0]);
+                                    setEditTaskGroup(group);
+                                }}
+                            >
+                                Edit
                             </button>
                         </div>
                     </li>
                 ))}
             </ul>
+
+            {/* Edit Task Form */}
+            {editTaskId && (
+                <div className="mt-4">
+                    <h3>Edit Task</h3>
+                    <input
+                        type="text"
+                        value={editTask}
+                        onChange={(e) => setEditTask(e.target.value)}
+                        className="form-control mb-2"
+                    />
+                    <input
+                        type="date"
+                        value={editDate}
+                        onChange={(e) => setEditDate(e.target.value)}
+                        className="form-control mb-2"
+                    />
+                    <select
+                        className="form-select mb-2"
+                        value={editTaskGroup}
+                        onChange={(e) => setEditTaskGroup(e.target.value)}
+                    >
+                        <option value="">Select a Group</option>
+                        {groups.map(group => (
+                            <option key={group.id} value={group.id}>
+                                {group.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button className="btn btn-success" onClick={handleEditTask}>
+                        Save Changes
+                    </button>
+                    <button className="btn btn-secondary ms-2" onClick={() => setEditTaskId('')}>
+                        Cancel
+                    </button>
+                </div>
+            )}
+
             <Menu />
         </div>
     );
