@@ -1,17 +1,33 @@
 "use client";
+
 import { useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, githubProvider } from '../../helpers/firebase';
 import Image from 'next/image';
+import { useAppContext } from '@/helpers/context';
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+
+  const router = useRouter();
   const [error, setError] = useState('');
+  const {data, setData} = useAppContext();
 
   const handleLogin = async (provider) => {
     try {
-      await signInWithPopup(auth, provider);
+      let user = await signInWithPopup(auth, provider);
+      setData(prev => {
+        prev.user = {
+          uid: user.user.uid,
+          name: user.user.displayName,
+          email: user.user.email,
+        }
+        return prev
+      }
+        );
+
       // Redirige al usuario a la página principal o dashboard
-      window.location.href = '/';
+      router.push("/"); // Ensure the route is correct
     } catch (err) {
       setError('Error al iniciar sesión: ' + err.message);
     }
@@ -19,14 +35,40 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
+      <Image
+        className="mb-4"
+        src="/logo.png"
+        alt="ToDoTec logo"
+        width={180}
+        height={180}
+        priority
+      />
       <h2>Iniciar Sesión</h2>
       <div className="buttons-container">
-        <button onClick={() => handleLogin(googleProvider)} className="login-button google-button">
-          <Image src="/icons/googleicon.png" alt="Google" className="icon" width={24} height={24} />
+        <button
+          onClick={() => handleLogin(googleProvider)}
+          className="login-button google-button"
+        >
+          <Image
+            src="/icons/googleicon.png"
+            alt="Google"
+            className="icon"
+            width={24}
+            height={24}
+          />
           <span>Iniciar sesión con Google</span>
         </button>
-        <button onClick={() => handleLogin(githubProvider)} className="login-button github-button">
-          <Image src="/icons/githubicon.svg" alt="GitHub" className="icon" width={24} height={24} />
+        <button
+          onClick={() => handleLogin(githubProvider)}
+          className="login-button github-button"
+        >
+          <Image
+            src="/icons/githubicon.svg"
+            alt="GitHub"
+            className="icon"
+            width={24}
+            height={24}
+          />
           <span>Iniciar sesión con GitHub</span>
         </button>
       </div>
