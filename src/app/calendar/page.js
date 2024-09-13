@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { getTasksForDate } from '../../helpers/api';
+import Menu from "@/components/Menu";
 
 const CalendarView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -191,6 +192,7 @@ const CalendarView = () => {
           color: #333333;
         }
       `}</style>
+      <Menu />
     </div>
   );
 };
