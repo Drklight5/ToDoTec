@@ -5,10 +5,13 @@ import Link from "next/link";
 import { Validate } from "@/components/Validate";
 import { useAppContext } from "@/helpers/context";
 import Menu from "../components/Menu";
+import { createWeekDictionary } from "@/helpers/date";
 
 export default function Home() {
   const { data } = useAppContext();
-  const dias = ["lu", "ma", "mi", "ju", "vi", "sa", "do"];
+  
+
+  const dias = createWeekDictionary();
   const tareas = ["lu", "ma", "mi", "ju", "vi", "sa", "do"];
 
   return (
@@ -23,11 +26,14 @@ export default function Home() {
         {/* MOSTRAR RACHA */}
         <div className="my-5">
           <h5 className="text-body-tertiary">DIAS COMPLETOS</h5>
-          <div className="d-flex col-12 col-md-9 col-xl-6 justify-content-bewteen overflow-x-auto">
+          <div className="d-flex col-12 col-md-9 col-lg-6  justify-content-bewteen overflow-x-auto">
             {dias.map((element, i) => (
-              <div key={i} className="p-3 bg-body-tertiary rounded m-2">
-                <i class="bi bi-fire fs-2 text-warning"></i>
-                <div className="text-center">{element}</div>
+              <div key={i} className="p-3 bg-body-tertiary rounded m-2 col-3 col-lg-2">
+                <div className="d-flex w-100 justify-content-center">
+                  <i className="bi bi-fire fs-2 text-warning"></i>
+                </div>
+                <div className="text-center small">{element[0]}</div>
+                <div className="text-center small">{element[1]}</div>
               </div>
             ))}
           </div>
@@ -37,7 +43,10 @@ export default function Home() {
           <h5 className="text-body-tertiary">TAREAS PENDIENTES</h5>
           <div className="my-3 col-12 col-md-9 col-xl-6">
             {tareas.map((element, i) => (
-              <div key={i} className="rounded-4 bg-body-tertiary my-3 px-4 py-3">
+              <div
+                key={i}
+                className="rounded-4 bg-body-tertiary my-3 px-4 py-3"
+              >
                 {element}
               </div>
             ))}
