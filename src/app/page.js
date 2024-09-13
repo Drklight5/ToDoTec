@@ -3,8 +3,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Validate } from '@/components/Validate';
-import Menu from '@/components/Menu';
 import { useAppContext } from '@/helpers/context';
+import Menu from '@/components/Menu';
 
 export default function Home() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function Home() {
 
         
       </main>
-      <Menu></Menu>
+      <Menu/>
     </div>
   );
 }
