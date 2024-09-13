@@ -67,7 +67,7 @@ const CalendarView = () => {
           Next
         </button>
       </div>
-      <div className="main-content">
+      <div className="main-content d-flex flex-wrap">
         <div className="calendar-grid">
           {days.map((day) => (
             <div

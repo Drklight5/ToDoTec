@@ -280,21 +280,19 @@ export default function Todo() {
                 backgroundColor: status === "complete" ? "#d4edda" : "#f8d7da",
               }}
             >
-              <div className='col-2 col-md-1'>
-                <button
-                  className={`btn ${
+              <div className="col-2 col-md-1">
+                {/*  className={`btn ${
                     status === "complete" ? "btn-secondary" : "border"
-                  } me-2`}
-                  onClick={() => handleUpdateTaskStatus(id, status)}
-                >
+                  } me-2`} */}
+                <div onClick={() => handleUpdateTaskStatus(id, status)}>
                   {status === "complete" ? (
-                    <i class="bi bi-check-circle-fill"></i>
+                    <i class="bi bi-check-circle-fill fs-4 text-secondary"></i>
                   ) : (
-                    <i class="bi bi-check-circle"></i>
+                    <i class="bi bi-circle fs-4 "></i>
                   )}
-                </button>
+                </div>
               </div>
-              <div className='col'>
+              <div className="col">
                 <strong>{task}</strong>
                 <br />
                 <small>{new Date(date).toDateString()}</small>
@@ -304,14 +302,14 @@ export default function Todo() {
                 </small>
               </div>
               <div>
-                <button
-                  className="btn btn-danger me-2"
+                <div
+                  className="btn p-2 me-2"
                   onClick={() => handleDeleteTask(id)}
                 >
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-                <button
-                  className="btn btn-info"
+                  <i class="bi bi-trash-fill text-danger"></i>
+                </div>
+                <div
+                  className="p-2"
                   onClick={() => {
                     setEditTaskId(id);
                     setEditTask(task);
@@ -319,8 +317,8 @@ export default function Todo() {
                     setEditTaskGroup(group);
                   }}
                 >
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
+                  <i class="bi bi-pencil-fill text-info"></i>
+                </div>
               </div>
             </li>
           ))}
