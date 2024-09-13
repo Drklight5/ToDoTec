@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function PomodoroPage() {
     const [time, setTime] = useState(25 * 60);
