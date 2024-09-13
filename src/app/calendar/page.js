@@ -85,11 +85,17 @@ const CalendarView = () => {
             <span className="tasks-date">{selectedDate.toDateString()}</span>
           </div>
           <ul className="task-list">
-            {tasks.map((task, index) => (
-              <li key={index} className="task-item">
-                {task.name}
-              </li>
-            ))}
+            {tasks.map((task, index) => {
+                if (task.date.split("T")[0] === selectedDate){
+                    <li key={index} className="task-item">
+                        {task.name}
+                    </li>
+                }
+                else{
+                    return <></>
+                }
+            })
+            }
           </ul>
         </div>
       </div>
