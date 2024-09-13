@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Validate } from '@/components/Validate';
 import { useAppContext } from '@/helpers/context';
-import Menu from '@/components/Menu';
+import Menu from '../components/Menu';
 
 export default function Home() {
   const router = useRouter();
