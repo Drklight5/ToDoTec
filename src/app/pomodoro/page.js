@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import db from '../../helpers/firebase'; // Ajusta la ruta del import si es necesario
 import Menu from '@/components/Menu';
+import { Validate } from '@/components/Validate';
 
 export default function PomodoroPage() {
     const [time, setTime] = useState(25 * 60);

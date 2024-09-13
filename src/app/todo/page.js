@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import db from '../../helpers/firebase'; // Adjust the import path if necessary
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 import Menu from '@/components/Menu';
+import { useAppContext } from '@/helpers/context';
+import { Validate } from '@/components/Validate';
 
 export default function Todo() {
+
+    const {data} = useAppContext()
     const [task, setTask] = useState('');
     const [tasks, setTasks] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -140,8 +144,9 @@ export default function Todo() {
     });
 
     return (
-        <div className="container my-5">
-            <h1 className="mb-4">ToDo List</h1>
+      <div className="container my-5">
+        <Validate/>
+        <h1 className="mb-4">ToDo List</h1>
 
             {/* Input field and Add button */}
             <div className="mb-4">
