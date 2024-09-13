@@ -1,10 +1,9 @@
 // app/todo/page.js
-
 "use client"; // Ensure client-side rendering
 
 import { useEffect, useState } from 'react';
 import db from '../../helpers/firebase'; // Adjust the import path if necessary
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 import Menu from '@/components/Menu';
 
 export default function Todo() {
@@ -12,11 +11,12 @@ export default function Todo() {
     const [tasks, setTasks] = useState([]);
     const [groups, setGroups] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState('');
-    const [showManageGroups, setShowManageGroups] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
+    const [editGroupId, setEditGroupId] = useState('');
+    const [editGroupName, setEditGroupName] = useState('');
 
-    const tasksCollectionRef = collection(db, 'tasks');
-    const groupsCollectionRef = collection(db, 'groups');
+    const tasksCollectionRef = collection(db, 'tasks'); // Name of your Firestore collection
+    const groupsCollectionRef = collection(db, 'groups'); // Name of your Firestore collection
 
     const fetchTasks = async () => {
         try {
@@ -31,7 +31,7 @@ export default function Todo() {
     const fetchGroups = async () => {
         try {
             const querySnapshot = await getDocs(groupsCollectionRef);
-            const groupsArray = querySnapshot.docs.map(doc => ({ id: doc.id, name: doc.data().name }));
+            const groupsArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setGroups(groupsArray);
         } catch (error) {
             console.error("Error fetching groups: ", error);
@@ -41,8 +41,9 @@ export default function Todo() {
     const handleAddTask = async () => {
         if (task.trim() === '') return;
         try {
-            await addDoc(tasksCollectionRef, { task: task, group: selectedGroup });
+            await addDoc(tasksCollectionRef, { task: task, status: 'incomplete', group: selectedGroup });
             setTask('');
+            setSelectedGroup('');
             fetchTasks(); // Refresh the task list
         } catch (error) {
             console.error("Error adding task: ", error);
@@ -58,30 +59,44 @@ export default function Todo() {
         }
     };
 
-    const handleAddGroup = async () => {
+    const handleUpdateTaskStatus = async (id, status) => {
+        try {
+            await updateDoc(doc(db, 'tasks', id), { status: status });
+            fetchTasks(); // Refresh the task list
+        } catch (error) {
+            console.error("Error updating task status: ", error);
+        }
+    };
+
+    const handleCreateGroup = async () => {
         if (newGroupName.trim() === '') return;
         try {
             await addDoc(groupsCollectionRef, { name: newGroupName });
             setNewGroupName('');
-            fetchGroups(); // Refresh the groups list
+            fetchGroups(); // Refresh the group list
         } catch (error) {
-            console.error("Error adding group: ", error);
+            console.error("Error creating group: ", error);
         }
     };
 
     const handleDeleteGroup = async (id) => {
         try {
             await deleteDoc(doc(db, 'groups', id));
-            // Also remove tasks assigned to this group
-            const querySnapshot = await getDocs(tasksCollectionRef);
-            const tasksArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const tasksToDelete = tasksArray.filter(task => task.group === id);
-            for (const task of tasksToDelete) {
-                await deleteDoc(doc(db, 'tasks', task.id));
-            }
-            fetchGroups(); // Refresh the groups list
+            fetchGroups(); // Refresh the group list
         } catch (error) {
             console.error("Error deleting group: ", error);
+        }
+    };
+
+    const handleUpdateGroup = async () => {
+        if (editGroupName.trim() === '') return;
+        try {
+            await updateDoc(doc(db, 'groups', editGroupId), { name: editGroupName });
+            setEditGroupName('');
+            setEditGroupId('');
+            fetchGroups(); // Refresh the group list
+        } catch (error) {
+            console.error("Error updating group: ", error);
         }
     };
 
@@ -103,17 +118,19 @@ export default function Todo() {
                     placeholder="Add a new task"
                     className="form-control"
                 />
+                <select
+                    className="form-select mt-2"
+                    value={selectedGroup}
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                >
+                    <option value="">Select a Group</option>
+                    {groups.map(group => (
+                        <option key={group.id} value={group.id}>
+                            {group.name}
+                        </option>
+                    ))}
+                </select>
                 <div className='d-flex justify-content-end'>
-                    <select
-                        className="form-control mt-2"
-                        value={selectedGroup}
-                        onChange={(e) => setSelectedGroup(e.target.value)}
-                    >
-                        <option value="">Select a group</option>
-                        {groups.map(({id, name}) => (
-                            <option key={id} value={id}>{name}</option>
-                        ))}
-                    </select>
                     <button className="btn btn-primary my-2" onClick={handleAddTask}>
                         Add Task
                     </button>
@@ -123,70 +140,94 @@ export default function Todo() {
             {/* Manage Groups */}
             <div className="mb-4">
                 <button
-                    className="btn btn-secondary"
-                    onClick={() => setShowManageGroups(!showManageGroups)}
+                    className="btn btn-secondary my-2"
+                    onClick={() => document.getElementById('group-form').classList.toggle('d-none')}
                 >
-                    {showManageGroups ? 'Close Group Management' : 'Manage Groups'}
+                    Manage Groups
                 </button>
-                {showManageGroups && (
-                    <div className="mt-3">
-                        <input
-                            type="text"
-                            value={newGroupName}
-                            onChange={(e) => setNewGroupName(e.target.value)}
-                            placeholder="New group name"
-                            className="form-control mb-2"
-                        />
-                        <button
-                            className="btn btn-primary mb-2"
-                            onClick={handleAddGroup}
-                        >
-                            Add Group
-                        </button>
-                        <ul className="list-group">
-                            {groups.map(({id, name}) => (
-                                <li
-                                    key={id}
-                                    className="list-group-item d-flex justify-content-between align-items-center"
-                                >
-                                    {name}
-                                    <button
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => handleDeleteGroup(id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </li>
+                <div id="group-form" className="d-none">
+                    <h3>Create Group</h3>
+                    <input
+                        type="text"
+                        value={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                        placeholder="New Group Name"
+                        className="form-control mb-2"
+                    />
+                    <button className="btn btn-primary" onClick={handleCreateGroup}>
+                        Create Group
+                    </button>
+                    {groups.length > 0 && (
+                        <div className="mt-3">
+                            <h4>Edit or Delete Groups</h4>
+                            {groups.map(group => (
+                                <div key={group.id} className="d-flex align-items-center mb-2">
+                                    {editGroupId === group.id ? (
+                                        <>
+                                            <input
+                                                type="text"
+                                                value={editGroupName}
+                                                onChange={(e) => setEditGroupName(e.target.value)}
+                                                className="form-control me-2"
+                                            />
+                                            <button className="btn btn-success me-2" onClick={handleUpdateGroup}>
+                                                Save
+                                            </button>
+                                            <button className="btn btn-secondary" onClick={() => setEditGroupId('')}>
+                                                Cancel
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="me-2">{group.name}</span>
+                                            <button className="btn btn-warning me-2" onClick={() => {
+                                                setEditGroupId(group.id);
+                                                setEditGroupName(group.name);
+                                            }}>
+                                                Edit
+                                            </button>
+                                            <button className="btn btn-danger" onClick={() => handleDeleteGroup(group.id)}>
+                                                Delete
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
                             ))}
-                        </ul>
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Task list */}
             <ul className="list-group">
-                {tasks.map(({id, task, group}) => {
-                    // Find the group name for the current task
-                    const groupName = groups.find(g => g.id === group)?.name || 'No Group';
-
-                    return (
-                        <li
-                            key={id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                        >
-                            <strong>{groupName}</strong>: {task}
+                {tasks.map(({ id, task, status, group }) => (
+                    <li
+                        key={id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                        style={{ backgroundColor: status === 'incomplete' ? '#f8d7da' : '#d4edda' }}
+                    >
+                        <span>
+                            {group && <strong>{groups.find(g => g.id === group)?.name}: </strong>}
+                            {task}
+                        </span>
+                        <div>
+                            <button
+                                className="btn btn-secondary btn-sm me-2"
+                                onClick={() => handleUpdateTaskStatus(id, status === 'incomplete' ? 'complete' : 'incomplete')}
+                            >
+                                {status === 'incomplete' ? 'Change to Complete' : 'Change to Incomplete'}
+                            </button>
                             <button
                                 className="btn btn-danger btn-sm"
                                 onClick={() => handleDeleteTask(id)}
                             >
                                 Delete
                             </button>
-                        </li>
-                    );
-                })}
+                        </div>
+                    </li>
+                ))}
             </ul>
-
-            <Menu/>
+            <Menu />
         </div>
     );
 }
